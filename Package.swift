@@ -4,48 +4,36 @@ import PackageDescription
 let package = Package(
     name: "CardIO",
     platforms: [
-        .iOS(.v11) // Минимальная версия iOS 11
+        .iOS(.v9) // или выше
     ],
     products: [
         .library(
             name: "CardIO",
             targets: ["CardIO"]
-        ),
+        )
     ],
     targets: [
         .target(
             name: "CardIO",
             path: "CardIO",
+            // Исключаем только папки с демками и файлами сборки.
+            // ThirdParty оставляем, так как там могут быть нужные зависимости.
             exclude: [
-                "Samples", // Исключаем папку с примерами
-                "ThirdParty", // Исключаем папку с зависимостями
-                "AudioTools/README.txt", // Исключаем ненужные файлы
-                "CMakeLists.txt" // Исключаем файлы сборки CMake
+                "Samples",
+                "Samples/*",
+                "CMakeLists.txt",
+                "AudioTools/README.txt"
             ],
-            sources: [
-                "AudioTools",
-                "Models",
-                "Utility",
-                "card.io"
-            ],
-            publicHeadersPath: "include", // Указываем путь к публичным заголовкам
+            publicHeadersPath: ".",
             cSettings: [
-                .headerSearchPath("."), // Добавляем пути для поиска заголовков
+                // Пути к заголовкам, в т.ч. подпапкам
+                .headerSearchPath("."),
                 .headerSearchPath("AudioTools"),
                 .headerSearchPath("Models"),
                 .headerSearchPath("Utility"),
-                .headerSearchPath("card.io")
-            ],
-            linkerSettings: [
-                .linkedFramework("AVFoundation"), // Добавляем необходимые фреймворки
-                .linkedFramework("AudioToolbox"),
-                .linkedFramework("CoreMedia"),
-                .linkedFramework("CoreVideo"),
-                .linkedFramework("MobileCoreServices"),
-                .linkedFramework("OpenGLES"),
-                .linkedFramework("UIKit"),
-                .linkedFramework("Foundation"),
-                .linkedFramework("CoreGraphics")
+                .headerSearchPath("card.io"),
+                // Если нужны заголовки из ThirdParty, добавляем:
+                .headerSearchPath("ThirdParty")
             ]
         )
     ],
